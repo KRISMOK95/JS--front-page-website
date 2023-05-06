@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./style.css">
     <title>Machine Doctor</title>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body>
     <section class="front-page">
@@ -23,30 +24,43 @@
                 <line class="line" y1="1" x2="44" y2="1" stroke="black" stroke-width="3"/>
                 <line class="line" y1="9" x2="27" y2="9" stroke="black" stroke-width="3"/>
                 <line class="line" y1="17" x2="11" y2="17" stroke="black" stroke-width="3"/>
-                </svg>
+            </svg>
             <div class="selling-point">
                 <h2>Scan your machines and fix it yourself</h2>
                 <h3>Click on the button below to start</h3>
             </div>
             <div class="ctas">
-                <button class="cta-sec">Scan</button>
+                <button id="start-scanner" class="cta-sec">Scan</button>
                 <button class="cta-main">
                     <a href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_YTBmZGQ1YTMtNjFkZS00MGRjLWJlYWMtMDE2N2VkNjUzNzgy%40thread.v2/0?context=%7b%22Tid%22%3a%225d1a9f9d-201f-4a10-b983-451cf65cbc1e%22%2c%22Oid%22%3a%22b3e8de70-4a50-4168-ac63-d61bce402f5a%22%7d">Video chat with an expert</a>
                 </button>
             </div>
         </nav>
     </section>
-
-
-    <video id="qr-video" hidden></video>
-
-    <script src="https://cdn.jsdelivr.net/npm/qr-scanner/umd/qr-scanner.min.js"></script>
-
     
-    
-    
-    <script defer src="main.js"></script>
-    
+    <!-- Add a new div to hold the QR code scanner -->
+    <div id="reader" style="width: 500px;"></div>
 
+    <script>
+        function onScanSuccess(decodedText, decodedResult) {
+            console.log(`Scan result: ${decodedText}`, decodedResult);
+            html5QrcodeScanner.clear();
+            // Navigate to the URL in the QR code
+            window.location.href = decodedText;
+        }
+
+        function onScanError(errorMessage) {
+            console.warn(`Code scan error = ${errorMessage}`);
+        }
+
+        let html5QrcodeScanner;
+        document.getElementById("start-scanner").addEventListener("click", () => {
+            if (!html5QrcodeScanner) {
+                html5QrcodeScanner = new Html5QrcodeScanner("reader", {
+                    fps: 10, qrbox: { width: 250, height: 250 } }, false);
+            }
+            html5QrcodeScanner.render(onScanSuccess, onScanError);
+        });
+    </script>
 </body>
 </html>
